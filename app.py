@@ -1,8 +1,13 @@
 from tkinter import *
+from mydb import Database
+from tkinter import messagebox
 
 class NLPApp():
     
     def __init__(self):
+        
+        # Creating DB object & it will access all the methods from mydb.py file
+        self.db = Database()
         
         # login page
         self.root = Tk()
@@ -43,7 +48,7 @@ class NLPApp():
         self.password_input.pack(pady=(0,10), ipady=5)
         
         # login Button
-        login_btn = Button(self.root, text='Login', width=24, bg='#ff006d')
+        login_btn = Button(self.root, text='Login', width=24, bg='#ff006d', command=self.login)
         login_btn.pack(pady=(30, 10))
         login_btn.configure(font=('tahoma', 10, 'bold'))
         
@@ -63,13 +68,13 @@ class NLPApp():
         self.clear()
         
         # Heading of login page
-        heading = Label(self.root, text ='NLP APPLICATION', bg ='#AED6F1')
-        heading.pack(pady=(40, 5))
-        heading.configure(font=('tahoma', 30, 'bold'))
-        # Heading of Register page
-        heading = Label(self.root, text ='Registeration Page', bg ='#AED6F1')
-        heading.pack(pady=(5, 20))
-        heading.configure(font=('tahoma', 15, 'bold'))
+        heading1 = Label(self.root, text ='NLP APPLICATION', bg ='#AED6F1')
+        heading1.pack(pady=(40, 5))
+        heading1.configure(font=('tahoma', 30, 'bold'))
+    
+        heading2 = Label(self.root, text ='Registeration Page', bg ='#AED6F1')
+        heading2.pack(pady=(5, 20))
+        heading2.configure(font=('tahoma', 15, 'bold'))
         
         # Name
         name = Label(self.root, text ='Name', bg ='#AED6F1')
@@ -96,7 +101,7 @@ class NLPApp():
         self.password_input.pack(pady=(0,10), ipady=5)
         
         # Register Button
-        register_btn = Button(self.root, text='Register', width=24, bg='#45b592')
+        register_btn = Button(self.root, text='Register', width=24, bg='#45b592', command=self.registration)
         register_btn.pack(pady=(30, 10))
         register_btn.configure(font=('tahoma', 10, 'bold'))
         
@@ -116,6 +121,34 @@ class NLPApp():
         # Clear the existing page details after click on register now button
         for i in self.root.pack_slaves():
             i.destroy()
+            
+    # Registrastion method after click on Register button
+    def registration(self):
         
+        # Fetch details form registr page
+        name = self.name_input.get()
+        email = self.email_input.get()
+        password = self.password_input.get()
+        
+        response = self.db.add_data(name, email, password)
+        if response:
+            messagebox.showinfo('Successful', 'Registration Successful ! You can login now')
+        else:
+            messagebox.showerror('Error', 'Email already exists !')
+            
+    # Login method after click on Login button
+    def login(self):
+        
+        # Check details of login page (valid or not)
+        email = self.email_input.get()
+        password = self.password_input.get()
+        
+        response = self.db.search(email, password)
+        if response:
+            messagebox.showinfo('Successful', 'Login Successful !')
+        else:
+            messagebox.showerror('Error', 'Try again ! , Incorrect email / password ! ')
+            
+
     
 nlp = NLPApp()
