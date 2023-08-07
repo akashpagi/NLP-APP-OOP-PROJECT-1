@@ -15,7 +15,7 @@ class Database:
             # add new user
             database[email] = [name, password]
             with open('db.json', 'w') as wf:
-                json.dump(database, wf)
+                json.dump(database, wf, indent=4)
             return 1
                     
     # checking login page detail in db
